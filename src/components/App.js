@@ -1,11 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import { Container } from 'react-bootstrap'
-import { ethers } from 'ethers'
 
 // Components
 import Navigation from './Navigation'
-import Loading from './Loading'
+import Tabs from './Tabs'
+import Swap from './Swap'
+import Deposit from './Deposit'
+import Withdraw from './Withdraw'
+import Charts from './Charts'
 
 import {
   loadAccount,
@@ -24,8 +28,14 @@ function App() {
 
     const chainId = await loadNetwork(provider, dispatch)
 
-    // Fetch accounts
-    await loadAccount(dispatch)
+    window.ethereum.on('chainChanged', async (chainId) => {
+      window.location.reload()
+    })
+
+    window.ethereum.on('accountsChanged', async (accounts) => {
+      console.log('accounts', accounts)
+      await loadAccount(dispatch)
+    })
 
     // Initiate contracts
     await loadTokens(provider, chainId, dispatch)
@@ -38,16 +48,17 @@ function App() {
 
   return (
     <Container>
-      <Navigation account={'0x0...'} />
-
-      <h1 className='my-4 text-center'>React Hardhat Template</h1>
-
-      <>
-        <p className='text-center'>
-          <strong>Your ETH Balance:</strong> 0 ETH
-        </p>
-        <p className='text-center'>Edit App.js to add your code here.</p>
-      </>
+      <HashRouter>
+        <Navigation />
+        <hr />
+        <Tabs />
+        <Routes>
+          <Route exact path='/' element={<Swap />} />
+          <Route path='/deposit' element={<Deposit />} />
+          <Route path='/withdraw' element={<Withdraw />} />
+          <Route path='/charts' element={<Charts />} />
+        </Routes>
+      </HashRouter>
     </Container>
   )
 }

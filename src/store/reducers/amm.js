@@ -12,9 +12,12 @@ export const amm = createSlice({
       console.log('setContract', action.payload)
       state.contract = action.payload
     },
+    sharesLoaded: (state, action) => {
+      state.shares = action.payload
+    },
   },
 })
 
-export const { setContract } = amm.actions
+export const { setContract, sharesLoaded } = amm.actions
 
 export default amm.reducer
