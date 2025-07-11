@@ -53,6 +53,7 @@ const Deposit = () => {
       setToken1Amount(_token1Amount)
     }
   }
+
   const depositHandler = async (e) => {
     e.preventDefault()
 
